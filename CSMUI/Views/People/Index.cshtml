@@ -1,0 +1,87 @@
+﻿@model IEnumerable<DataObjects.Person>
+@using X.PagedList;
+@using X.PagedList.Mvc.Core;
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Information</h1>
+
+<p>
+    <a asp-action="Create">Create New Record</a>
+</p>
+<div class="row">
+    <div class="col-md-6">
+        <form class="d-flex" asp-action="Index">
+            <input name="searchString" class="form-control me-1" type="search" placeholder="Search" aria-label="Search" />
+            @Html.DropDownList("searchby", (IEnumerable<SelectListItem>)ViewData["datalist"], new { @class = "form-control" })
+            <button class="btn btn-dark" type="submit">Search</button>
+        </form>
+    </div>
+    <div class="col-md-6">
+        <a asp-action="Index" class="text-dark">Clear Search</a>
+    </div>
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateOfBirth)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Phone)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Address)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateOfBirth)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Phone)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Address)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+@Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new
+    {
+        page = page,
+        searchfor = Context.Request.Query["searchfor"],
+        searchby = @Context.Request.Query["searchby"]
+    }),
+    new PagedListRenderOptions { LiElementClasses = new string[] { "page-item" }, PageClasses = new string[] { "page-link" } })
